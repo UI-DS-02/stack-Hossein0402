@@ -27,19 +27,17 @@ public class HelloController implements Initializable {
                 else if (c == 'e')
                     stackDigit.push(2.7);
                 else if (c == 'L') {
-                    i++;
                     StringBuilder calLogarithm = new StringBuilder();
                     while (true) {
-                        calLogarithm.append(operation.charAt(i++));
+                        calLogarithm.append(operation.charAt(++i));
                         if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
                             break;
                     }
-                    stackDigit.push(Math.log(Double.parseDouble(String.valueOf(calLogarithm))));
+                    stackDigit.push(Math.log10(Double.parseDouble(String.valueOf(calLogarithm))));
                 } else if (c == 'S') {
-                    i++;
                     StringBuilder calSin = new StringBuilder();
                     while (true) {
-                        calSin.append(operation.charAt(i++));
+                        calSin.append(operation.charAt(++i));
                         if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
                             break;
                     }
@@ -48,7 +46,7 @@ public class HelloController implements Initializable {
                     i++;
                     StringBuilder calCos = new StringBuilder();
                     while (true) {
-                        calCos.append(operation.charAt(i++));
+                        calCos.append(operation.charAt(++i));
                         if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
                             break;
                     }
