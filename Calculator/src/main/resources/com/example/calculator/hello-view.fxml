@@ -15,7 +15,7 @@
             <Image url="@Jowhareh_galleries_6_poster_fed62dc8-439c-4386-b651-b8abe0c5f47c.jpeg" />
          </image>
       </ImageView>
-      <Button focusTraversable="false" layoutY="463.0" mnemonicParsing="false" onAction="#fac" onMouseClicked="#fac" prefHeight="61.0" prefWidth="81.0" text="FAC">
+      <Button focusTraversable="false" layoutY="463.0" mnemonicParsing="false" onAction="#fac" prefHeight="61.0" prefWidth="81.0" text="FAC">
          <font>
             <Font size="16.0" />
          </font>
@@ -60,17 +60,17 @@
             <Font size="13.0" />
          </font>
       </Button>
-      <Button focusTraversable="false" layoutX="162.0" layoutY="226.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="81.0" text="LOG">
+      <Button focusTraversable="false" layoutX="162.0" layoutY="226.0" mnemonicParsing="false" onAction="#log" prefHeight="27.0" prefWidth="81.0" text="LOG">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button focusTraversable="false" layoutX="81.0" layoutY="226.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="81.0" text="SIN">
+      <Button focusTraversable="false" layoutX="81.0" layoutY="226.0" mnemonicParsing="false" onAction="#sin" prefHeight="27.0" prefWidth="81.0" text="SIN">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button focusTraversable="false" layoutY="226.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="81.0" text="COS">
+      <Button focusTraversable="false" layoutY="226.0" mnemonicParsing="false" onAction="#cos" prefHeight="27.0" prefWidth="81.0" text="COS">
          <font>
             <Font size="13.0" />
          </font>
@@ -79,7 +79,10 @@
          <font>
             <Font name="System Bold" size="17.0" />
          </font></TextField>
-      <Label fx:id="answer" layoutX="13.0" layoutY="94.0" prefHeight="40.0" prefWidth="136.0" />
+      <Label fx:id="answer" layoutX="13.0" layoutY="94.0" prefHeight="40.0" prefWidth="136.0">
+         <font>
+            <Font size="17.0" />
+         </font></Label>
       <Label fx:id="history" alignment="TOP_LEFT" layoutX="9.0" layoutY="162.0" prefHeight="61.0" prefWidth="306.0" />
    </children>
 </AnchorPane>

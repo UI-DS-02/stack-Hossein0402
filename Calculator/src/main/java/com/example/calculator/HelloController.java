@@ -4,15 +4,17 @@ import Stack.ArrayStack;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
 
-    public Double calculating(String operation) {
+    public Double calculating(String operation, StringBuilder history) {
         try {
             if (!this.checkParentheses(operation))
                 throw new Exception();
@@ -20,7 +22,38 @@ public class HelloController implements Initializable {
             ArrayStack<Character> stackOperator = new ArrayStack<Character>(20);
             for (int i = 0; i < operation.length(); i++) {
                 char c = operation.charAt(i);
-                if (Character.isDigit(c)) {
+                if (c == 'P')
+                    stackDigit.push(3.14);
+                else if (c == 'e')
+                    stackDigit.push(2.7);
+                else if (c == 'L') {
+                    i++;
+                    StringBuilder calLogarithm = new StringBuilder();
+                    while (true) {
+                        calLogarithm.append(operation.charAt(i++));
+                        if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
+                            break;
+                    }
+                    stackDigit.push(Math.log(Double.parseDouble(String.valueOf(calLogarithm))));
+                } else if (c == 'S') {
+                    i++;
+                    StringBuilder calSin = new StringBuilder();
+                    while (true) {
+                        calSin.append(operation.charAt(i++));
+                        if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
+                            break;
+                    }
+                    stackDigit.push(Math.log(Double.parseDouble(String.valueOf(calSin))));
+                } else if (c == 'C') {
+                    i++;
+                    StringBuilder calCos = new StringBuilder();
+                    while (true) {
+                        calCos.append(operation.charAt(i++));
+                        if (!(i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')))
+                            break;
+                    }
+                    stackDigit.push(Double.parseDouble(String.valueOf(calCos)));
+                } else if (Character.isDigit(c)) {
                     StringBuilder digit = new StringBuilder();
                     digit.append(c);
                     if (i != operation.length() - 1 && (Character.isDigit(operation.charAt(i + 1)) || operation.charAt(i + 1) == '.')) {
@@ -35,46 +68,42 @@ public class HelloController implements Initializable {
                     stackOperator.push(c);
                 else if (c == ')') {
                     while (!stackOperator.isEmpty() && stackOperator.peek() != '(')
-                        this.calculatingStack(stackDigit, stackOperator.pop());
+                        this.calculatingStack(stackDigit, stackOperator.pop(), history);
                     stackOperator.pop();
                 } else if (!stackOperator.isEmpty() && this.giveValue(stackOperator.peek()) == this.giveValue(c) && c == '^') {
                     stackOperator.push(c);
                 } else if (!stackOperator.isEmpty() && this.giveValue(stackOperator.peek()) == this.giveValue(c)) {
-                    this.calculatingStack(stackDigit, stackOperator.pop());
+                    this.calculatingStack(stackDigit, stackOperator.pop(), history);
                     stackOperator.push(c);
                 } else {
                     while (!stackOperator.isEmpty() && this.giveValue(stackOperator.peek()) > this.giveValue(c))
-                        this.calculatingStack(stackDigit, stackOperator.pop());
+                        this.calculatingStack(stackDigit, stackOperator.pop(), history);
                     stackOperator.push(c);
                 }
             }
             while (!stackOperator.isEmpty())
-                this.calculatingStack(stackDigit, stackOperator.pop());
+                this.calculatingStack(stackDigit, stackOperator.pop(), history);
             return stackDigit.pop();
         } catch (Exception e) {
-
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("wrong pattern of operation");
+            alert.setTitle("ERROR");
+            alert.show();
         }
         return null;
     }
 
     public int giveValue(char c) {
-        switch (c) {
-            case '+':
-            case '-':
-                return 1;
-            case '/':
-            case '*':
-                return 2;
-            case '^':
-                return 3;
-            case '!':
-                return 4;
-            default:
-                return 0;
-        }
+        return switch (c) {
+            case '+', '-' -> 1;
+            case '/', '*' -> 2;
+            case '^' -> 3;
+            case '!' -> 4;
+            default -> 0;
+        };
     }
 
-    public void calculatingStack(ArrayStack<Double> stack, char operator) throws Exception {
+    public void calculatingStack(ArrayStack<Double> stack, char operator, StringBuilder history1) throws Exception {
         double firstDigit = stack.pop();
         double secondDigit = 0;
         if (operator != '!' && stack.isEmpty())
@@ -85,25 +114,31 @@ public class HelloController implements Initializable {
             case '+':
                 stack.pop();
                 stack.push(firstDigit + secondDigit);
+                history1.append(secondDigit).append("+").append(firstDigit).append("   ");
                 break;
             case '-':
                 stack.pop();
                 stack.push(secondDigit - firstDigit);
+                history1.append(secondDigit).append("-").append(firstDigit).append("   ");
                 break;
             case '*':
                 stack.pop();
                 stack.push(firstDigit * secondDigit);
+                history1.append(secondDigit).append("*").append(firstDigit).append("   ");
                 break;
             case '/':
                 stack.pop();
                 stack.push(secondDigit / firstDigit);
+                history1.append(secondDigit).append("/").append(firstDigit).append("   ");
                 break;
             case '!':
                 stack.push(factorial(firstDigit));
+                history1.append(firstDigit).append("!").append("   ");
                 break;
             case '^':
                 stack.pop();
                 stack.push(Math.pow(secondDigit, firstDigit));
+                history1.append(secondDigit).append("^").append(firstDigit).append("   ");
         }
     }
 
@@ -172,7 +207,19 @@ public class HelloController implements Initializable {
 
     @FXML
     void equalSign(ActionEvent event) {
-
+        try {
+            StringBuilder str = new StringBuilder();
+            double answer = this.calculating(this.textOperation.getText(), str);
+            double num = answer;
+            DecimalFormat df = new DecimalFormat("#.####");
+            this.answer.setText("Answer: " + df.format(answer));
+            this.history.setText(String.valueOf(str));
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("wrong pattern of operation");
+            alert.setTitle("ERROR");
+            alert.show();
+        }
     }
 
     @FXML
@@ -243,6 +290,21 @@ public class HelloController implements Initializable {
     @FXML
     void zero(ActionEvent event) {
         this.textOperation.appendText("0");
+    }
+
+    @FXML
+    void log(ActionEvent event) {
+        this.textOperation.appendText("L");
+    }
+
+    @FXML
+    void sin(ActionEvent event) {
+        this.textOperation.appendText("S");
+    }
+
+    @FXML
+    void cos(ActionEvent event) {
+        this.textOperation.appendText("C");
     }
 
 }

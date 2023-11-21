@@ -10,10 +10,6 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        String postfixExpression = "4-2";
-        HelloController helloController = new HelloController();
-        double x =helloController.calculating(postfixExpression);
-        System.out.println(x);
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 324, 524);
         stage.setTitle("Calculator");
